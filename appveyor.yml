@@ -8,9 +8,7 @@ build:
 # MSBuild verbosity level
   verbosity: minimal
 after_test: 
-  - packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe" -targetargs:"/noresults /noisolation /testcontainer:""..\OrderManagementAPITests\bin\Release\OrderManagementAPITests.dll" -excludebyattribute:*.ExcludeFromCodeCoverage* -filter:"+[OrderManagementAPI]OrderManagementAPI.*Orders +[OrderManagementAPITests]OrderManagementAPI*" -hideskipped:All -output:.\OrderManagementAPITests_coverage.xml   
+  - packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe" -targetargs:"/noresults /noisolation /testcontainer:""..\OrderManagementAPITests\bin\Release\OrderManagementAPITests.dll" -excludebyattribute:*.ExcludeFromCodeCoverage* -filter:"+[OrderManagementAPI]OrderManagementAPI.*Orders +[OrderManagementAPITests]OrderManagementAPI*" -hideskipped:All -output:.\Codecoverage.xml  
   - "SET PATH=C:\\Python27;C:\\Python27\\Tools\\Scripts;%PATH%"
   - pip install codecov
-  - codecov -f "OrderManagementAPITests_coverage.xml"
-  - packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:".\packages\NUnit.ConsoleRunner.3.6.1\tools\nunit3-console.exe" -targetargs:".\UnitTest\bin\Release\UnitTest.dll" -excludebyattribute:*.ExcludeFromCodeCoverage* -excludebyfile:*\*Designer.cs -hideskipped:All -output:.\Codecoverage.xml 
   - codecov -f "Codecoverage.xml"
