@@ -1,7 +1,6 @@
 # CustomerOrdersAPI
 
 CI : [![Build status](https://ci.appveyor.com/api/projects/status/p4fxw6guu3vdpo8c?svg=true)](https://ci.appveyor.com/project/rpavankumar-reddy/customerordersapi)
-CodeCoverage: [![codecov](https://codecov.io/gh/rpavankumar-reddy/CustomerOrdersAPI/branch/master/graph/badge.svg)](https://codecov.io/gh/rpavankumar-reddy/CustomerOrdersAPI)
 
 
 
