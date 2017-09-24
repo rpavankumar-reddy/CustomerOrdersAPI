@@ -8,119 +8,155 @@ namespace OrderManagementAPI.Custom
 {
     public class ManageOrders:IManageOrders
     {
-        List<OrderItems> cusList = new List<OrderItems>
+        List<OrderItems> cusOrderList;
+        public ManageOrders()
         {
-            new OrderItems
+            cusOrderList = new List<OrderItems>
             {
-                OrderId = 1, CustomerName = "Mark", Phone = "7777766666", Address = "London",ItemBasketList= new List<Items>
+                new OrderItems
                 {
-                    new Items { ItemName = "Iphone6",ItemQuantity = 2 },
-                    new Items { ItemName = "Galaxy",  ItemQuantity = 1 }
+                    OrderId = 1, CustomerName = "Mark", Phone = "7777766666", Address = "London",ItemBasketList= new List<Items>
+                    {
+                        new Items { ItemName = "Iphone6",ItemQuantity = 2 },
+                        new Items { ItemName = "Galaxy",  ItemQuantity = 1 }
 
+                    }
                 }
-            }
-        };
+            };
+        }
 
+        public ManageOrders(List<OrderItems> cusOrderList)
+        {
+            this.cusOrderList = cusOrderList;
+        }
+      
+        /// <summary>
+        /// Get all Orders
+        /// </summary>
+        /// <returns></returns>
         public List<OrderItems> GetAllOrders()
         {
-            return cusList;
+            return cusOrderList;
         }
 
-
-        public OrderItems GetCustomerOrders(int orderId)
+        /// <summary>
+        /// Get a single order
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public OrderItems GetOrder(int orderId)
         {
-            return cusList.FirstOrDefault(c => c.OrderId == orderId);
+            return cusOrderList.FirstOrDefault(c => c.OrderId == orderId);
         }
 
+        /// <summary>
+        /// Add new order
+        /// </summary>
+        /// <param name="customerOrder"></param>
+        /// <returns></returns>
         public OrderItems AddCustomerOrder(OrderItems customerOrder)
         {
 
             if (customerOrder == null)
             {
-                throw new ArgumentNullException("item");
+                throw new ArgumentNullException("Not Valid Data");
             }
-            var itemToRemove = cusList.SingleOrDefault(r => r.OrderId == customerOrder.OrderId);
-            if (itemToRemove != null)
+            var order = cusOrderList.SingleOrDefault(r => r.OrderId == customerOrder.OrderId);
+            if (order != null)
             {
-                throw new Exception("CustomerBasket Id already exists");
+                throw new Exception("CustomerOrder already exists");
             }
-            cusList.Add(customerOrder);           
+            cusOrderList.Add(customerOrder);           
             return customerOrder;
         }
        
+        /// <summary>
+        /// Update the existing order
+        /// </summary>
+        /// <param name="customerOrder"></param>
+        /// <returns></returns>
         public OrderItems UpdateCustomerOrder(OrderItems customerOrder)
         {
-            var item = cusList.SingleOrDefault(r => r.OrderId == customerOrder.OrderId);
+            if (customerOrder == null)
+            {
+                throw new ArgumentNullException("Not Valid Data");
+            }
+            var item = cusOrderList.SingleOrDefault(r => r.OrderId == customerOrder.OrderId);
             if (item != null)
             {
-                cusList.Remove(item);
+                cusOrderList.Remove(item);
             }
             else
             {
-                throw new Exception("Userbasket not existed");
+                throw new Exception("CustomerOrder not exists to update");
             }           
-            cusList.Add(customerOrder);
+            cusOrderList.Add(customerOrder);
             return customerOrder;
         }
 
-        //Deletes the customer order
+        /// <summary>
+        /// Deletes the order
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
         public OrderItems DeleteCustomerOrder(int orderId)
         {
-            var itemToRemove = cusList.SingleOrDefault(r => r.OrderId == orderId);
+            var itemToRemove = cusOrderList.SingleOrDefault(r => r.OrderId == orderId);
             if (itemToRemove != null)
             {               
-                cusList.Remove(itemToRemove);
+                cusOrderList.Remove(itemToRemove);
             }
             return itemToRemove;
         }
 
-
+        /// <summary>
+        /// Add new items for the order
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="itemName"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
         public OrderItems AddOrderItems(int orderId, string itemName, int quantity)
         {
 
-            var custbasket = cusList.SingleOrDefault(r => r.OrderId == orderId);
+            var custBasket = cusOrderList.SingleOrDefault(r => r.OrderId == orderId);
 
-            if (custbasket != null)
+            if (custBasket != null)
             {
-                List<Items> ItemBasketList = custbasket.ItemBasketList;
+                List<Items> ItemBasketList = custBasket.ItemBasketList;
                 var basketitem = ItemBasketList.SingleOrDefault(r => r.ItemName == itemName);
+
                 if (basketitem != null)
-                    throw new Exception("Items already exists");
+                    throw new Exception("Item already exists");
                 Items item = new Models.Items();
                 item.ItemName = itemName;
                 item.ItemQuantity = quantity;
                 ItemBasketList.Add(item);
-                custbasket.ItemBasketList = ItemBasketList;
+                custBasket.ItemBasketList = ItemBasketList;
             }
-            return custbasket;
-        }
-        public OrderItems RemoveOrderItems(int orderId, string itemName, int quantity)
-        {
-
-            var custbasket = cusList.SingleOrDefault(r => r.OrderId == orderId);
-
-            if (custbasket != null)
-            {
-                List<Items> ItemBasketList = custbasket.ItemBasketList;
-                var basketitem = ItemBasketList.SingleOrDefault(r => r.ItemName == itemName);
-                if (basketitem != null)
-                    ItemBasketList.Remove(basketitem);
-
-                custbasket.ItemBasketList = ItemBasketList;
-            }
-            return custbasket;
+            return custBasket;
         }
 
+        /// <summary>
+        /// Update the items in order
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="itemName"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
         public OrderItems UpdateOrderItems(int orderId, string itemName, int quantity)
         {
-            var custbasket = cusList.SingleOrDefault(r => r.OrderId == orderId);
+            var custbasket = cusOrderList.SingleOrDefault(r => r.OrderId == orderId);
 
             if (custbasket != null)
             {
                 List<Items> ItemBasketList = custbasket.ItemBasketList;
                 var basketitem = ItemBasketList.SingleOrDefault(r => r.ItemName == itemName);
+                              
                 if (basketitem != null)
                     ItemBasketList.Remove(basketitem);
+                else
+                     throw new ArgumentNullException("Item Not exists");
                 Items item = new Models.Items();
                 item.ItemName = itemName;
                 item.ItemQuantity = quantity;
@@ -130,9 +166,40 @@ namespace OrderManagementAPI.Custom
             return custbasket;
         }
 
-        public OrderItems ClearCustomerOrderList(int orderId)
+        /// <summary>
+        /// Remove an item in the order
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="itemName"></param>      
+        /// <returns></returns>
+        public OrderItems RemoveOrderItems(int orderId, string itemName)
         {
-            var custbasket = cusList.SingleOrDefault(r => r.OrderId == orderId);
+
+            var custbasket = cusOrderList.SingleOrDefault(r => r.OrderId == orderId);
+
+            if (custbasket != null)
+            {
+                List<Items> ItemBasketList = custbasket.ItemBasketList;
+                var basketitem = ItemBasketList.SingleOrDefault(r => r.ItemName == itemName);
+
+                if (basketitem != null)
+                    ItemBasketList.Remove(basketitem);
+                else
+                    throw new ArgumentNullException("Item Not exists");
+
+                custbasket.ItemBasketList = ItemBasketList;
+            }
+            return custbasket;
+        }       
+
+        /// <summary>
+        /// Clears all the items in the order
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public OrderItems ClearOrderItemsList(int orderId)
+        {
+            var custbasket = cusOrderList.SingleOrDefault(r => r.OrderId == orderId);
 
             if (custbasket != null)
             {
